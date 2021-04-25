@@ -15,7 +15,7 @@
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/systemlogo1" />
+                android:src="@mipmap/ic_launcher" />
             <RelativeLayout
                 android:id="@+id/set_btn1"
                 android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                     android:background="@color/color_transparent"
                     android:gravity="center"
                     android:onClick="personalSetting"
-                    android:text="环信多人会议"
+                    android:text="多人会议"
                     android:textColor="#333333"
                     android:textSize="14sp" />
             </RelativeLayout>
