@@ -12,7 +12,6 @@
         android:id="@+id/ll_top_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:background="#1C1C1A"
         android:orientation="vertical">
         <TextView
@@ -26,7 +25,7 @@
             android:textSize="15sp"/>
         <TextView
             android:id="@+id/Meeting_duration"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"

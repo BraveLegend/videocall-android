@@ -83,6 +83,7 @@ import com.hyphenate.chat.EMConferenceManager;
 import com.hyphenate.chat.EMConferenceMember;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMLiveRegion;
+import com.hyphenate.chat.EMMirror;
 import com.hyphenate.chat.EMStreamParam;
 import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.chat.EMWhiteboard;
@@ -126,6 +127,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -350,6 +352,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         registerInviteBroadCast();
 
         EMClient.getInstance().conferenceManager().enableStatistics(true);
+        EMClient.getInstance().conferenceManager().setLocalVideoViewMirror(EMMirror.OFF);
 
         OrientationInit();
 
@@ -539,7 +542,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         mic_view = (TextView) findViewById(R.id.text_call_mic);
         video_view = (TextView) findViewById(R.id.text_call_video);
         whiteboard_view = (TextView) findViewById(R.id.text_whiteboard);
-
+        Log.e(TAG, "onCreate. tid=" + Thread.currentThread().getId());
         timeHandler = new TimeHandler();
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -4083,6 +4086,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
     int count = 0;
 
     private void updateConferenceTime(String time) {
+        Log.d(TAG, "时间：" + time);
         meeting_duration.setText(time);
         //checkWifiState();
         if (count == 0) {
@@ -4244,7 +4248,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         private int timePassed = 0;
 
         public TimeHandler() {
-            dateFormat = new SimpleDateFormat("HH:mm:ss");
+            dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
@@ -4260,6 +4264,7 @@ public class ConferenceActivity extends AppCompatActivity implements EMConferenc
         public void handleMessage(Message msg) {
             if (msg.what == MSG_TIMER) {
                 // TODO: update calling time.
+                Log.e(TAG, "handleMessage. tid=" + Thread.currentThread().getId());
                 timePassed++;
                 String time = dateFormat.format(timePassed * 1000);
                 updateConferenceTime(time);

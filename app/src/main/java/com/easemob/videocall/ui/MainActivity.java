@@ -146,9 +146,9 @@ public class MainActivity extends Activity {
         });
 
         String roomName = this.getIntent().getStringExtra("roomName");
-        if(roomName == null){
+        if (roomName == null) {
             Intent intent = getIntent();
-            if(intent != null) {
+            if (intent != null) {
                 uri = intent.getData();
                 if (null != uri) {
                     EMLog.i(TAG, "uri-->" + "" + uri.getScheme()
@@ -162,26 +162,26 @@ public class MainActivity extends Activity {
                                 Toast.makeText(getApplicationContext(), "您已经在此会议中",
                                         Toast.LENGTH_SHORT).show();
                                 finish();
-                            }else{
+                            } else {
 
                                 Intent roomintent = new Intent("com.invate.conference.LOCAL_BROADCAST");
                                 roomintent.putExtra("roomName", roomInfo);
                                 LocalBroadcastManager.getInstance(DemoHelper.getInstance().getContext()).sendBroadcast(roomintent);
                                 finish();
                             }
-                        }else{
+                        } else {
                             roomnameEditText.setText(roomInfo);
                             btn_anchor.setBackgroundResource(R.drawable.em_button_add_bg);
                             addconference_anchor(this.version_view);
                         }
-                    }else {
+                    } else {
                         roomnameEditText.setText(roomInfo);
                         btn_anchor.setBackgroundResource(R.drawable.em_button_add_bg);
                         addconference_anchor(this.version_view);
                     }
                 }
             }
-        }else{
+        } else {
             roomnameEditText.setText(roomName);
             btn_anchor.setBackgroundResource(R.drawable.em_button_add_bg);
             addconference_anchor(this.version_view);
@@ -190,10 +190,10 @@ public class MainActivity extends Activity {
 
 
     /**
-     加入会议房间
+     * 加入会议房间
      */
-    public void addconference_anchor(View view){
-        if(showNickNameFlag){
+    public void addconference_anchor(View view) {
+        if (showNickNameFlag) {
             return;
         }
         getLatestVersion();
@@ -202,47 +202,47 @@ public class MainActivity extends Activity {
         currentRoomname = roomnameEditText.getText().toString().trim();
         currentPassword = roomnameEditText.getText().toString().trim();
 
-        if(currentRoomname.length() == 0 && currentPassword.length() == 0){
+        if (currentRoomname.length() == 0 && currentPassword.length() == 0) {
             setError_text("房间名不允许为空");
             setBtnEnable(true);
             return;
         }
-        if(currentRoomname.length() < 3){
+        if (currentRoomname.length() < 3) {
             setError_text("房间名不能少于3位");
             setBtnEnable(true);
             return;
         }
-        if(currentPassword.length() < 3){
+        if (currentPassword.length() < 3) {
             setBtnEnable(true);
             setError_text("密码不能少于3位");
             return;
         }
 
-        if(currentRoomname.length() > 18){
+        if (currentRoomname.length() > 18) {
             setBtnEnable(true);
             setError_text("房间名不能超过18位");
             return;
         }
-        if(currentPassword.length() > 18){
+        if (currentPassword.length() > 18) {
             setBtnEnable(true);
             setError_text("房间名不能超过18位");
             return;
         }
-        if(!isLegalChars(currentRoomname)){
+        if (!isLegalChars(currentRoomname)) {
             setBtnEnable(true);
             setError_text("房间名不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符");
             return;
         }
-        if(!isLegalChars(currentPassword)){
+        if (!isLegalChars(currentPassword)) {
             setBtnEnable(true);
             setError_text("密码不允许输入除数字、中文、英文、下划线或者减号以外的特殊字符");
             return;
         }
 
-        if(!PreferenceManager.getInstance().isAudience()){
+        if (!PreferenceManager.getInstance().isAudience()) {
             conferenceRole = EMConferenceManager.EMConferenceRole.Talker;
             ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Talker);
-        }else{
+        } else {
             conferenceRole = EMConferenceManager.EMConferenceRole.Audience;
             ConferenceInfo.getInstance().setCurrentrole(EMConferenceManager.EMConferenceRole.Audience);
         }
@@ -251,37 +251,37 @@ public class MainActivity extends Activity {
 
         currentNickname = PreferenceManager.getInstance().getCurrentUserNick();
 
-        if(currentNickname != null){
-            if(username == null){
+        if (currentNickname != null) {
+            if (username == null) {
                 register();
-            }else{
+            } else {
                 password = PreferenceManager.getInstance().getCurrentUserPassWord();
                 login();
             }
-        }else{
+        } else {
             showNickNameFlag = true;
             setNickNameDialogDisplay();
         }
     }
 
 
-
     /**
      * 输入字符检测(只能输入数字，字母，汉字和下划线)
+     *
      * @param chars
      * @return
      */
-    public static boolean isLegalChars(String chars){
-        String regex ="^[\\u4e00-\\u9fa5A-Za-z0-9_-]*$";
+    public static boolean isLegalChars(String chars) {
+        String regex = "^[\\u4e00-\\u9fa5A-Za-z0-9_-]*$";
         boolean result = chars.matches(regex);
         return result;
     }
 
 
     /**
-    自动注册一个账号
+     * 自动注册一个账号
      */
-    public void register(){
+    public void register() {
         //加载loading
         register = true;
         setProgressDialog();
@@ -305,17 +305,17 @@ public class MainActivity extends Activity {
                     register = false;
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            int errorCode=e.getErrorCode();
-                            if(errorCode==EMError.NETWORK_ERROR){
+                            int errorCode = e.getErrorCode();
+                            if (errorCode == EMError.NETWORK_ERROR) {
                                 setError_text(getResources().getString(R.string.network_anomalies));
-                            }else if(errorCode == EMError.USER_ALREADY_EXIST){
+                            } else if (errorCode == EMError.USER_ALREADY_EXIST) {
                                 setError_text(getResources().getString(R.string.User_already_exists));
-                            }else if(errorCode == EMError.USER_AUTHENTICATION_FAILED){
-                                setError_text( getResources().getString(R.string.registration_failed_without_permission));
-                            }else if(errorCode == EMError.USER_ILLEGAL_ARGUMENT){
+                            } else if (errorCode == EMError.USER_AUTHENTICATION_FAILED) {
+                                setError_text(getResources().getString(R.string.registration_failed_without_permission));
+                            } else if (errorCode == EMError.USER_ILLEGAL_ARGUMENT) {
                                 setError_text(getResources().getString(R.string.illegal_user_name));
-                            }else if(errorCode == EMError.EXCEED_SERVICE_LIMIT){
-                            }else{
+                            } else if (errorCode == EMError.EXCEED_SERVICE_LIMIT) {
+                            } else {
                                 setError_text(getResources().getString(R.string.Registration_failed));
                             }
                             setBtnEnable(true);
@@ -328,11 +328,11 @@ public class MainActivity extends Activity {
     }
 
     /**
-    登录IM账号
+     * 登录IM账号
      */
     public void login() {
         Log.d(TAG, "EMClient.getInstance().login");
-        if(!register){
+        if (!register) {
             setProgressDialog();
         }
         EMClient.getInstance().login(username, password, new EMCallBack() {
@@ -340,16 +340,18 @@ public class MainActivity extends Activity {
             public void onSuccess() {
                 Log.d(TAG, "login: onSuccess");
                 //登录成功进入会议房间
-                if(currentRoomname == null || currentPassword == null){
+                if (currentRoomname == null || currentPassword == null) {
                     setError_text("房间名不允许为空");
                     return;
                 }
                 joinRoom();
             }
+
             @Override
             public void onProgress(int progress, String status) {
                 Log.d(TAG, "login: onProgress");
             }
+
             @Override
             public void onError(final int code, final String message) {
                 Log.d(TAG, "login: onError: " + code);
@@ -366,11 +368,11 @@ public class MainActivity extends Activity {
     }
 
     /**
-     加入会议室
+     * 加入会议室
      */
     private void joinRoom() {
         ConferenceInfo.getInstance().Init();
-        if(conferenceSession.getConferenceProfiles() != null){
+        if (conferenceSession.getConferenceProfiles() != null) {
             conferenceSession.getConferenceProfiles().clear();
         }
         DemoHelper.getInstance().setGlobalListeners();
@@ -378,73 +380,74 @@ public class MainActivity extends Activity {
         roomConfig.setNickName(currentNickname);
         roomConfig.setRecord(PreferenceManager.getInstance().isRecordOnServer());
         roomConfig.setMergeRecord(PreferenceManager.getInstance().isMergeStream());
-        if(PreferenceManager.getInstance().isPushCDN()){
-            if(PreferenceManager.getInstance().getCDNUrl() != null){
-                if(PreferenceManager.getInstance().getCDNUrl().length() > 0) {
+        if (PreferenceManager.getInstance().isPushCDN()) {
+            if (PreferenceManager.getInstance().getCDNUrl() != null) {
+                if (PreferenceManager.getInstance().getCDNUrl().length() > 0) {
                     String url = PreferenceManager.getInstance().getCDNUrl();
                     EMLiveConfig liveConfig = null;
                     EMCDNCanvas canvas = null;
-                    if(PreferenceManager.getInstance().isPushAudioStream()){ //开启纯音频推流
-                        canvas = new EMCDNCanvas(0,0, 0,30,900,"H264");
+                    if (PreferenceManager.getInstance().isPushAudioStream()) { //开启纯音频推流
+                        canvas = new EMCDNCanvas(0, 0, 0, 30, 900, "H264");
                         liveConfig = new EMLiveConfig(url, canvas);
                         EMAudioConfig audioConfig = new EMAudioConfig();
                         liveConfig.setAudioConfig(audioConfig);
-                    }else{
-                        canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth,ConferenceInfo.CanvasHeight, 0,30,900,"H264");
+                    } else {
+                        canvas = new EMCDNCanvas(ConferenceInfo.CanvasWidth, ConferenceInfo.CanvasHeight, 0, 30, 900, "H264");
                         liveConfig = new EMLiveConfig(url, canvas);
                     }
                     roomConfig.setLiveConfig(liveConfig);
-               }
-           }
+                }
+            }
         }
 
         try {
             JSONObject extobject = new JSONObject();
-            extobject.putOpt("headImage",PreferenceManager.getInstance().getCurrentUserAvatar());
+            extobject.putOpt("headImage", PreferenceManager.getInstance().getCurrentUserAvatar());
             String extStr = extobject.toString();
-            extStr = extStr.replace("\\","");
+            extStr = extStr.replace("\\", "");
             roomConfig.setExt(extStr);
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole,roomConfig, new EMValueCallBack<EMConference>(){
-                    @Override
-                    public void onSuccess(EMConference value) {
-                        setError_text("");
-                        EMLog.i(TAG, "join  conference success");
-                        ConferenceInfo.getInstance().setRoomname(currentRoomname);
-                        ConferenceInfo.getInstance().setPassword(currentPassword);
-                        ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
-                        ConferenceInfo.getInstance().setConference(value);
+        EMClient.getInstance().conferenceManager().joinRoom(currentRoomname, currentPassword, conferenceRole, roomConfig, new EMValueCallBack<EMConference>() {
+            @Override
+            public void onSuccess(EMConference value) {
+                setError_text("");
+                EMLog.i(TAG, "join  conference success");
+                ConferenceInfo.getInstance().setRoomname(currentRoomname);
+                ConferenceInfo.getInstance().setPassword(currentPassword);
+                ConferenceInfo.getInstance().setCurrentrole(value.getConferenceRole());
+                ConferenceInfo.getInstance().setConference(value);
 
-                        EMLog.i(TAG, "Get ConferenceId:"+ value.getConferenceId() + "conferenceRole :"+  conferenceRole + " role：" + value.getConferenceRole());
-                        conferenceSession.setConfrId(value.getConferenceId());
-                        conferenceSession.setConfrPwd(value.getPassword());
-                        conferenceSession.setSelfUserId(username);
-                        conferenceSession.setStreamParam(value);
+                EMLog.i(TAG, "Get ConferenceId:" + value.getConferenceId() + "conferenceRole :" + conferenceRole + " role：" + value.getConferenceRole());
+                conferenceSession.setConfrId(value.getConferenceId());
+                conferenceSession.setConfrPwd(value.getPassword());
+                conferenceSession.setSelfUserId(username);
+                conferenceSession.setStreamParam(value);
 
-                        Intent intent = new Intent(MainActivity.this, ConferenceActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                Intent intent = new Intent(MainActivity.this, ConferenceActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onError(final int error, final String errorMsg) {
+                dialog.dismiss();
+                register = false;
+                EMLog.e(TAG, "join conference failed error " + error + ", msg " + errorMsg);
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onError(final int error, final String errorMsg) {
-                        dialog.dismiss();
-                        register = false;
-                        EMLog.e(TAG, "join conference failed error " + error + ", msg " + errorMsg);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setBtnEnable(true);
-                                if(error == CALL_TALKER_ISFULL) {
-                                    takerFullDialogDisplay();
-                                }else{
-                                    setError_text("Join conference failed " + error + " " + errorMsg);
-                                }
-                            }
-                        });
+                    public void run() {
+                        setBtnEnable(true);
+                        if (error == CALL_TALKER_ISFULL) {
+                            takerFullDialogDisplay();
+                        } else {
+                            setError_text("Join conference failed " + error + " " + errorMsg);
+                        }
                     }
                 });
+            }
+        });
     }
 
     /**
@@ -467,7 +470,7 @@ public class MainActivity extends Activity {
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 dialog.dismiss();
                 EMLog.e(TAG, "talker is full , join conference as Audience");
                 conferenceRole = EMConferenceManager.EMConferenceRole.Audience;
@@ -489,7 +492,6 @@ public class MainActivity extends Activity {
 
     /**
      * 查询最新版本号 进行强制升级
-     *
      */
     private void getLatestVersion() {
         new AsyncTask<String, Void, String>() {
@@ -508,7 +510,7 @@ public class MainActivity extends Activity {
                     String line;
 
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    while((line = br.readLine()) != null) {
+                    while ((line = br.readLine()) != null) {
                         sb.append(line);
                     }
                     headImage = sb.toString();
@@ -523,9 +525,9 @@ public class MainActivity extends Activity {
             // 后台的计算结果将通过该方法传递到UI线程，并且在界面上展示给用户.
             @Override
             protected void onPostExecute(String ImageStr) {
-                if(ImageStr != null){
+                if (ImageStr != null) {
                     try {
-                        ImageStr = ImageStr.replace(" ","");
+                        ImageStr = ImageStr.replace(" ", "");
                         JSONObject object = new JSONObject(ImageStr);
                         JSONObject versionobj = object.optJSONObject("version");
                         String newverison = versionobj.optString("Android");
@@ -533,7 +535,7 @@ public class MainActivity extends Activity {
                         String versionName = "V";
                         versionName = versionName + currentversion;
                         version_view.setText(versionName);
-                        if(!currentversion.equals(newverison)){
+                        if (!currentversion.equals(newverison)) {
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -542,7 +544,7 @@ public class MainActivity extends Activity {
                                     dialog.setCancelable(false);
                                     View dialogView = View.inflate(MainActivity.this, R.layout.activity_updata_version, null);
                                     TextView infoView = dialogView.findViewById(R.id.current_info_view);
-                                    infoView.setText("检测到当前不是最新版本"+ "\n" + "为了不影响您正常使用" + "\n" + "请更新到最新版");
+                                    infoView.setText("检测到当前不是最新版本" + "\n" + "为了不影响您正常使用" + "\n" + "请更新到最新版");
                                     Button okbtn = dialogView.findViewById(R.id.btn_update_ok);
                                     okbtn.setText("确定");
                                     dialog.setView(dialogView);
@@ -553,8 +555,8 @@ public class MainActivity extends Activity {
                                     final Button btn_ok = dialogView.findViewById(R.id.btn_update_ok);
                                     btn_ok.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public void onClick(View view){
-                                            EMLog.i(TAG, "getLatestVersion currentversion:"+ currentversion + "  newverison:" + newverison);
+                                        public void onClick(View view) {
+                                            EMLog.i(TAG, "getLatestVersion currentversion:" + currentversion + "  newverison:" + newverison);
                                             finish();
                                             dialog.dismiss();
                                         }
@@ -563,7 +565,7 @@ public class MainActivity extends Activity {
                             });
                         }
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -572,10 +574,9 @@ public class MainActivity extends Activity {
     }
 
 
-
-
     /**
      * 获取当前版本号
+     *
      * @return
      * @throws Exception
      */
@@ -600,7 +601,7 @@ public class MainActivity extends Activity {
     /**
      * 设置昵称提示
      */
-    private  void  setNickNameDialogDisplay(){
+    private void setNickNameDialogDisplay() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         final AlertDialog nickName_dialog = builder.create();
         View dialogView = View.inflate(MainActivity.this, R.layout.activity_nickname_editshow, null);
@@ -620,32 +621,32 @@ public class MainActivity extends Activity {
         CharSequence text = editText.getText();
         //Debug.asserts(text instanceof Spannable);
         if (text instanceof Spannable) {
-            Spannable spanText = (Spannable)text;
+            Spannable spanText = (Spannable) text;
             Selection.setSelection(spanText, text.length());
         }
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         currentNickname = editText.getText().toString().trim();
-                        if(currentNickname.length() == 0){
+                        if (currentNickname.length() == 0) {
                             setBtnEnable(true);
                             setError_text("昵称不允许为空");
                             nickName_dialog.dismiss();
                             showNickNameFlag = false;
-                            if(dialog != null){
+                            if (dialog != null) {
                                 dialog.dismiss();
                             }
-                        }else {
+                        } else {
                             nickName_dialog.dismiss();
                             showNickNameFlag = false;
-                            EMLog.e(TAG,"setting nickName  succeed  currentNickname:" + currentNickname);
+                            EMLog.e(TAG, "setting nickName  succeed  currentNickname:" + currentNickname);
                             PreferenceManager.getInstance().setCurrentUserNick(currentNickname);
-                            if(username == null){
+                            if (username == null) {
                                 register();
-                            }else{
+                            } else {
                                 password = PreferenceManager.getInstance().getCurrentUserPassWord();
                                 login();
                             }
@@ -662,7 +663,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         setBtnEnable(true);
                         nickName_dialog.dismiss();
-                        if(dialog != null){
+                        if (dialog != null) {
                             dialog.dismiss();
                         }
                         //主播已满不加入会议
@@ -676,9 +677,9 @@ public class MainActivity extends Activity {
     }
 
     /**
-    个人设置
+     * 个人设置
      */
-    public void personalSetting(View view){
+    public void personalSetting(View view) {
         Intent intent = new Intent(MainActivity.this,
                 SettingActivity.class);
         startActivity(intent);
@@ -687,16 +688,19 @@ public class MainActivity extends Activity {
     /**
      * 禁止进入房间按钮操作
      */
-    private void setBtnEnable(boolean enable){
+    private void setBtnEnable(boolean enable) {
         btn_anchor.setEnabled(enable);
     }
 
     /**
      * 设置错误提示信息
      */
-    private void setError_text(String errorText){
+    private void setError_text(String errorText) {
         runOnUiThread(new Runnable() {
             public void run() {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 error_text_view.setText(errorText);
             }
         });
@@ -704,10 +708,9 @@ public class MainActivity extends Activity {
 
     /**
      * 设置动态加载进度条
-     *
      */
-    void  setProgressDialog(){
-        dialog = new Dialog(this);
+    void setProgressDialog() {
+        dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.login_loading_dialog);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setCancelable(false);// 设置是否可以通过点击Back键取消
@@ -740,7 +743,6 @@ public class MainActivity extends Activity {
         }
 
     }
-
 
 
     @TargetApi(23)

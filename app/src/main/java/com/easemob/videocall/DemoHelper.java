@@ -80,8 +80,11 @@ public class DemoHelper {
 	public void init(Context context) {
 	    EMOptions options = initChatOptions(context);
 		options.enableDNSConfig(false);
-		options.setRestServer("https://private-preview-a1.easemob.com");
+		/*options.setRestServer("https://private-preview-a1.easemob.com");
 		options.setIMServer("private-preview-msync.easemob.com");
+		options.setImPort(16717);*/
+		options.setRestServer("172.16.163.132:12001");
+		options.setIMServer("172.16.163.132");
 		options.setImPort(16717);
         appContext = context;
 		PreferenceManager.init(context);
